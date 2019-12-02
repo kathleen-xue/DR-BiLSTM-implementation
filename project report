@@ -1,0 +1,34 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{dirtytalk}
+\usepackage{preamble}
+
+\newcommand\course{CSCI 544}
+\newcommand\hwnumber{}
+\newcommand\userID{Kathleen Xue, James Ke, \\  Guohao Li, Yichen Wu}
+
+\begin{document}
+\section*{a. Task Description, Problem Formulation}
+The task we decided to complete for this course project was Natural Language Inference, a task in which the model tries to determine whether a hypothesis is true, false, or undetermined given a premise. The way this problem is formulated is as a classification problem, where each hypothesis is classified as neutral, contradiction, or entailment based on the premise. For instance, the following table gives a good example of the natural language inference task and classifying hypotheses.
+\begin{center}
+    \begin{tabular}{| c | c | c |}
+        \hline
+        Text & Judgment & Hypothesis \\ \hline
+        A woman walks into the department store. & contradiction & The woman is sleeping.
+        \\ \hline
+        A girl is eating ice cream. & neutral & Two girls are talking and eating. \\ \hline
+        A lady meets up with her friends. & contradiction & The lady is by herself. \\ \hline
+        Two men argue about stocks & entailment & The men are talking. \\ \hline
+    \end{tabular}
+\end{center}
+\section*{b. Baseline Algorithm}
+The baseline algorithm our group decided to use for this task was the Bowman model, which is a simple lexicalized classifier that implements 6 features types: 1) BLEU score of the hypothesis in comparison with the premise (with n-gram length between 1 and 4), 2) difference in length between hypothesis and premise, 3) amount of overlap between the words used in the hypothesis and the words used in the premise, 4) an indicator for every unigram and bigram in the hypothesis, 5) indicators for cross-unigrams between the premise and the hypothesis, and 6) indicators for cross-bigrams between the premise and the hypothesis. The reason we chose to use a simple lexicalized classifier is because it actually performs quite well on the SNLI dataset, which is also used for our improved algorithm (in the Bowman paper, the lexicalized classifier was able to correctly classify 78 percent of the test dataset). 
+\section*{c. Approach}
+In our approach, we decided to take inspiration from the paper DR-BiLSTM: Dependent Reading BiLSTM for Natural Language Inference by Reza Ghaeini et al.  The DR-BiLSTM model has four major components: input encoding, attention, inference, and finally classification.  \\ \\ 
+In terms of input encoding, because RNNs are commonly used in this step, the paper chose to utilize a bidirectional LSTM to complete this. The intuition for using the bidirectional LSTM instead of RNN is that this encoding method gives a more informative encoding by taking into account the history of both the premise and the hypothesis, which an RNN is incapable of doing. \\ \\ 
+In the attention step of the model, the paper utilizes a soft-alignment to connect relevant sub-components between the premise and the hypothesis. We then take these vectors and concatenate them with the difference and element-wise product vectors, before feeding them into a feed-forward neural layer with a ReLU activation function. \\ \\
+During the inference step of the model, the paper chooses to use another bidirectional LSTM to combine the two vectors computed from the attention step. The bidirectional LSTM is similar to the one used in the encoding step, but instead of only using dependent reading information, the inference steps passes in both dependent reading information as well as independent reading information into a max-pooling layer (which allows us to maximize the inferencing ability of the model because we now consider both independent and dependent readings). \\ \\
+In classification, the final step of the model, the paper takes the vectors aggregated from the inference stage and feeds them into a multilayer perceptron classifier with a tanh activation and softmax output layer. \\ \\
+Our group decided to build this model from end to end in order to replicate its results and see for ourselves the improvement that this model has on natural language inference as compared with a simple lexicalized classifier. 
+\section*{d. Results Analysis}
+\section*{e. Qualitative Analysis}
+\end{document}
