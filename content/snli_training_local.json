@@ -1,0 +1,17 @@
+{
+    "train_data": "train_data.pkl",
+    "valid_data": "dev_data.pkl",
+    "embeddings": "embeddings.pkl",
+
+    "target_dir": "./",
+
+    "hidden_size": 450,
+    "dropout": 0.4,
+    "num_classes": 3,
+
+    "epochs": 1,
+    "batch_size": 32,
+    "lr": 0.0004,
+    "patience": 5,
+    "max_gradient_norm": 10.0
+}
