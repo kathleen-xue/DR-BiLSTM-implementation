@@ -48,6 +48,7 @@ def test(model, dataloader):
     time_start = time.time()
     batch_time = 0.0
     accuracy = 0.0
+    first = True
 
     # Deactivate autograd for evaluation.
     with torch.no_grad():
@@ -68,6 +69,15 @@ def test(model, dataloader):
 
             accuracy += correct_predictions(probs, labels)
             batch_time += time.time() - batch_start
+            _, out_classes = probs.max(dim=1)
+            if first:
+                print ('Predictions for the first 5 sentences:')
+                print ('Predictions:')
+                print (out_classes[:5])
+                print ('Labels:')
+                print (labels[:5])
+                print ('0 = entailment, 1 = neutral, 2 = contradiction')
+                first = False 
 
     batch_time /= len(dataloader)
     total_time = time.time() - time_start
@@ -133,6 +143,14 @@ if __name__ == '__main__':
     test_data = 'test_data.pkl'
     checkpoint = 'best.pth.tar'
     batch_size = 32
+    print ('First 5 test sentences:')
+    sentences = ['This church choir sings to the masses as they sing joyous songs from the book at a church.    The church has cracks in the ceiling.',
+                'This church choir sings to the masses as they sing joyous songs from the book at a church. The church is filled with song.',
+                'This church choir sings to the masses as they sing joyous songs from the book at a church. A choir singing at a baseball game.',
+                'A woman with a green headscarf, blue shirt and a very big grin.    The woman is young.',
+                'A woman with a green headscarf, blue shirt and a very big grin.    The woman is very happy.']
+    for sent in sentences:
+        print (sent)
     main_test(test_data,
           checkpoint,
           batch_size)
