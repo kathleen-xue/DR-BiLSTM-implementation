@@ -9,7 +9,7 @@ import torch.nn as nn
 device = torch.device('cuda')
 
 # do SNLI corpus preprocessing and initial Bowman model
-snli = SNLI(batch_size=16, gpu=device)
+snli = SNLI(batch_size=32, gpu=device)
 model = Bowman(snli.TEXT.vocab)
 
 if __name__ == "__main__":
@@ -21,4 +21,4 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adadelta(model.parameters(), lr=0.1)
 
     # train the model
-    bowman_train(model, snli, criterion, optimizer, epoch_num=1000)
+    bowman_train(model, snli, criterion, optimizer, epoch_num=100)
