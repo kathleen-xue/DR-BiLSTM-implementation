@@ -35,7 +35,6 @@ class SNLI(object):
             self.train, self.dev, self.test = datasets.SNLI.splits(self.TEXT, self.LABEL, root='data')
             self.save_splited_sets(self.train, self.dev, self.test)
 
-
         # build vocab for corpus
         if os.path.exists('./data/snli_split/text_vocab') and os.path.exists('./data/snli_split/label_vocab'):
             # if local vocab exists, load local vocab into model
@@ -51,7 +50,6 @@ class SNLI(object):
                 dill.dump(self.TEXT.vocab, f)
             with open('./data/snli_split/label_vocab', 'wb')as f:
                 dill.dump(self.LABEL.vocab, f)
-
 
         # generate batch iterator
         self.train_iter, self.dev_iter, self.test_iter =  data.BucketIterator.splits((self.train, self.dev, self.test), batch_size=batch_size, device=gpu)
