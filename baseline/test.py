@@ -1,11 +1,13 @@
 from data import SNLI
 import torch
-snli = SNLI(batch_size=1)
 from model import Bowman
 
 
 device = torch.device('cuda')
-model = torch.load("./model/bowman_11.pt")
+
+snli = SNLI(batch_size=32, gpu=device)
+model = Bowman(snli.TEXT.vocab)
+model.load_state_dict(torch.load("./model/bowman_64.pth"))
 model.to(device)
 
 # first 5 premises with hypothesis

@@ -89,10 +89,11 @@ def bowman_eval(model, dataset, set_name, criterion):
     return c_count / t_count, epoch_loss / t_count
 
 if __name__ == "__main__":
-    model = Bowman()
-    model.load_state_dict(torch.load("./model/bowman_final.pth"))
     device = torch.device('cuda')
-    snli = SNLI(batch_size=16, gpu=device)
+    snli = SNLI(batch_size=32, gpu=device)
+    model = Bowman(snli.TEXT.vocab)
+    model.load_state_dict(torch.load("./model/bowman_64.pth"))
+    model.to(device)
     criterion = nn.CrossEntropyLoss()
     acc, loss = bowman_eval(model, snli, "Train", criterion)
     print("Train acc.: %.3f, loss : %.3f" % (acc, loss))
