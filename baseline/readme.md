@@ -15,3 +15,6 @@ python3 plotresult.py
 python3 test.py
 # Get acc. for different annotations
 python3 utils.py
+
+You can find the zip that contains all the large files here:
+https://drive.google.com/drive/folders/1qv8_adxl2img0Duwfg1bzuYQwucFKOR9
