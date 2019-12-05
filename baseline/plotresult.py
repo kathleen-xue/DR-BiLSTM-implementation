@@ -15,8 +15,8 @@ with open("result.txt", "rb") as f:
 
 x = range(len(train_loss))
 
-plt.plot(x, train_loss, label='train loss',linewidth=2,color='b') 
-plt.plot(x, dev_loss, label='dev loss',linewidth=2,color='r') 
+plt.plot(x, train_loss, label='train loss',linewidth=2,color='r') 
+plt.plot(x, dev_loss, label='dev loss',linewidth=2,color='b') 
 plt.xlabel('epoch')
 plt.ylabel('acc.')
 plt.title('Bowman\'s Model')
