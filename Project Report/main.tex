@@ -4,9 +4,9 @@
 
 \newcommand\course{CSCI 544}
 \newcommand\hwnumber{}
-\newcommand\userID{Kathleen Xue (kxue@usc) \\ James Ke (jianxink@usc) \\  Guohao Li (guohaol@usc) \\ Yichen Wu (wuyichen@usc)}
+\newcommand\userID{Kathleen Xue, Jianxing Ke, \\  Guohao Li, Yichen Wu}
 \begin{document}
-\section*{Submission} We chose to use Github to submit our code. \href{https://github.com/kathleen-xue/csci544project}{Here} is the repository.
+\section*{Submission} We chose to use Github to submit our code. \href{https://github.com/kathleen-xue/csci544project}{Here} is the repository. The students who worked on this project were Kathleen Xue (kxue@usc.edu, SID 6824587964), Jianxing Ke (jianxink@usc.edu, SID 7285185934), Guohao Li (guohaol@usc.edu, SID 2912331182), Yichen Wu (wuyichen@usc.edu, SID 8106714357). 
 \section*{a. Task Description, Problem Formulation}
 The task we decided to complete for this course project was Natural Language Inference, a task in which the model tries to determine whether a hypothesis is true, false, or undetermined given a premise. The way this problem is formulated is as a classification problem, where each hypothesis is classified as neutral, contradiction, or entailment based on the premise. For instance, the following table gives a good example of the natural language inference task and classifying hypotheses.
 \begin{center}
@@ -53,7 +53,7 @@ We found from running both the baseline algorithm and the paper algorithm on tra
 \end{center}
 Moreover, looking at the cross-entropy loss over multiple epochs, we can immediately tell that the cross entropy loss in the paper algorithm becomes lower earlier than the cross entropy loss of the baseline algorithm. \\
 \\
-As seen below, the cross-entropy loss of the Bowman model (left graph) approaches a minimum of around 0.55 after 80 epochs, but the DR-BiLSTM cross entropy loss (right graph) hits a minimum of around 0.25 after only 5 epochs. This means that the DR-BiLSTM model has a lower cross entropy loss, or a lower divergance between predicted judgments and actual judgments, than the Bowman model.\\
+As seen below, the cross-entropy loss of the Bowman model (left graph) approaches a minimum of around 0.60 after 50 epochs, but the DR-BiLSTM cross entropy loss (right graph) hits a minimum of around 0.25 after only 5 epochs. This means that the DR-BiLSTM model has a lower cross entropy loss, or a lower divergance between predicted judgments and actual judgments, than the Bowman model.\\
 \includegraphics[scale=0.53]{Bowmanxent.PNG}
 \includegraphics[scale=0.58]{DRLSTMxent.png} \\
 \\
@@ -102,6 +102,16 @@ We then looked at accuracy based on label, and found the test accuracy results d
         \hline
     \end{tabular}
 \end{center}
+Because both models' neutral statement accuracies were consistently lower than their entailment and contradiction statement accuracies, we wanted to further delve into how the models might be labeling neutral as opposed to entailment and contradiction hypotheses. We took the DR-BiLSTM's predicted softmax probabilities and plotted them on a 3D graph to better visualize the model's perspective of each of the three labels.\\ \\
+We can interpret each of the datapoints in the graphs below as how much the DR-BiLSTM model is \say{leaning} toward each of the labels. This is possible because the output probabilities are gotten from a softmax layer, which weights the probabilities and has the property that the sum of the probabilities sum to 1. So, for instance, given a datapoint [0.1, 0.2, 0.7] (where index i indicates the predicted probability that the hypothesis is of label i, and index 0=Entailment, index 1=Neutral, and index 2=Contradiction), when this datapoint is plotted onto the graph, we can see that the datapoint is majority-weighted in contradiction. \\ \\ 
+As such, we can easily tell from the graphs below that for ground truth entailment and contradiction hypotheses, the model very heavily leans toward the correct labels. For entailment and contradiction, in fact, the model very clearly knows that a ground truth entailment hypothesis is not a contradiction hypothesis, and vice-versa. But for ground truth neutral hypotheses, the model is actually visibly \say{confused} and has heavy collections of datapoints leaning towards both entailment and contradiction, meaning that the model in general can discern a neutral hypothesis correctly, but that the model sees the neutral hypothesis as close to both entailment and contradiction.\\
+\includegraphics[scale=0.55]{lstmEntailment.png}
+\includegraphics[scale=0.55]{lstmContradiction.png}\\
+\includegraphics[scale=0.52]{lstmNeutral.png}\\
+Contrasting the DR-BiLSTM model with the Bowman model, it becomes immediately clear that the DR-BiLSTM model's output probabilities are far more certain than the probabilities outputted by the Bowman model. Although the Bowman model only performs on average about 20$\%$ worse than the DR-BiLSTM model, the output probabilities it generates from its softmax layer have more noise, as we can see from the fact that the datapoints in the graphs below are not clustered tightly near the ground truth label but are rather clustered more generally around the ground truth label. Whereas for the DR-BiLSTM model it is much more clear-cut if a hypothesis belongs to entailment as opposed to contradiction, for the Bowman model each label is a fuzzy region and the Bowman model does not seem to see the neutral label as a middle ground between entailment and contradiction as the DR-BiLSTM model does.\\
+\includegraphics[scale=0.55]{bowmanEntailment.png}
+\includegraphics[scale=0.55]{bowmanContradiction.png}\\
+\includegraphics[scale=0.55]{bowmanNeutral.png}
 \section*{e. Qualitative Analysis}
 Given a list of test sentences from the SNLI test dataset (below), we ran both the Bowman model and the DR-BiLSTM model on these five sentences and outputted their labels as compared with the ground truth. \\
 \begin{enumerate}
@@ -127,11 +137,11 @@ The following table displays the 5 judgments each model made along with the grou
          \hline
          &  \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\ \hline
         \textbf{Ground truth} & Neutral & Entailment & Contradiction & Neutral & Entailment \\ \hline
-        \textbf{Bowman} & Entailment & Entailment & Contradiction & Entailment & Neutral \\ \hline
+        \textbf{Bowman} & Contradiction & Contradiction & Contradiction & Neutral & Neutral \\ \hline
         \textbf{DR-BiLSTM} & Contradiction & Entailment & Contradiction & Neutral & Neutral \\ \hline
     \end{tabular}
 \end{center}
-The DR-BiLSTM model predicted 3 labels correctly out of 5 examples. The judgment for the first sentence should be neutral, while the model predicted contradiction; the judgment for the last sentence should be entailment, while the model predicted neutral. The Bowman model, on the other hand, predicted 2 labels correctly out of 5 examples. Both models predicted correctly for the second and the third pairs; both models predicted the incorrect “neutral” for the last pair. \\
+The DR-BiLSTM model predicted 3 labels correctly out of 5 examples. The judgment for the first sentence should be neutral, while the model predicted contradiction; the judgment for the last sentence should be entailment, while the model predicted neutral. The Bowman model, on the other hand, predicted 2 labels correctly out of 5 examples. Both models predicted correctly for the third and the fourth pairs; both models predicted the incorrect \say{contradiction} for the first pair, and the incorrect “neutral” for the last pair. \\
 \\
 Perhaps the reason that both models incorrectly labeled the first sentence is that none of the words in the hypothesis are synonyms of the words in the text, but that the word \say{cracks} might be considered similar to the word \say{books} in some models. In terms of the last sentence, it is unclear why both models predicted the judgment would be neutral rather than entailment, as \say{happy} should be a very close synonym to \say{grin}. One factor that might have helped cause the models' incorrect judgments is that the models might not have assigned \say{a very big grin} to \say{a woman} because the given text is a phrase rather than a complete sentence. If the models failed to connect the fact that it was the woman who was grinning, then it makes sense that both of them saw the hypothesis of the woman being happy as neutral rather than entailment.
 \end{document}
