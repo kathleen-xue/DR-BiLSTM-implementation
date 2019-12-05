@@ -6,7 +6,7 @@
 \newcommand\hwnumber{}
 \newcommand\userID{Kathleen Xue, Jianxing Ke, \\  Guohao Li, Yichen Wu}
 \begin{document}
-\section*{Submission} We chose to use Github to submit our code. \href{https://github.com/kathleen-xue/csci544project}{Here} is the repository. The students who worked on this project were Kathleen Xue (kxue@usc.edu, SID 6824587964), Jianxing Ke (jianxink@usc.edu, SID 7285185934), Guohao Li (guohaol@usc.edu, SID 2912331182), Yichen Wu (wuyichen@usc.edu, SID 8106714357). 
+\section*{Submission} We chose to use Github to submit our code. \href{https://github.com/kathleen-xue/csci544project}{Here} is the repository. The students who worked on this project were Kathleen Xue (kxue@usc.edu, SID 6824587964), Jianxing Ke (jianxink@usc.edu, SID 7285185934), Guohao Li (guohaol@usc.edu, SID 2912331182), and Yichen Wu (wuyichen@usc.edu, SID 8106714357). 
 \section*{a. Task Description, Problem Formulation}
 The task we decided to complete for this course project was Natural Language Inference, a task in which the model tries to determine whether a hypothesis is true, false, or undetermined given a premise. The way this problem is formulated is as a classification problem, where each hypothesis is classified as neutral, contradiction, or entailment based on the premise. For instance, the following table gives a good example of the natural language inference task and classifying hypotheses.
 \begin{center}
@@ -44,7 +44,7 @@ We found from running both the baseline algorithm and the paper algorithm on tra
     \begin{tabular}{| c | c | c |}
         \hline
          & \textbf{Training} & \textbf{Validation}\\ \hline
-        \textbf{Bowman model} & 68.50$\%$ & 64.09$\%$
+        \textbf{Bowman model} & 66.10$\%$ & 64.90$\%$
         \\ \hline
         \textbf{DR-BiLSTM model (preset hyperparameters)*} & 90.81$\%$ & 87.18$\%$\\ \hline
         \textbf{DR-BiLSTM model (with batch=64)} & 89.29$\%$ & 87.07$\%$\\ \hline
@@ -64,28 +64,28 @@ For negation, we constructed a negation set from an online dictionary: $\{$no, n
 some, any, many, few, several, almost, nearly$\}$; for beliefs, we used the set $\{$know, believe,
 understand, doubt, think, suppose, recognize,
 forget, remember, imagine, mean, agree, disagree, deny, promise$\}$. \\ \\
-Surprisingly, the Bowman model did poorly with high-overlap sentences while the DR-BiLSTM model did well on that exact same category. This might be because the Bowman model does not take into account sequence for sentences, and may in fact have missed some key semantic details that the DR-BiLSTM model was able to catch for these high-overlap sentences. 
+Surprisingly, the Bowman model did poorly with high-overlap sentences while the DR-BiLSTM model did well on that exact same category. This might be because the Bowman model does not take into account sequence for sentences, and may in fact have missed some key semantic details that the DR-BiLSTM model was able to catch for these high-overlap sentences. Another surprising result from the below accuracies is the high performance of the Bowman model on sentences that contain belief words. We are unsure of why this might be, and think that this could be an area where we might want to think about conducting further experiments if we were to expand this project. 
 \begin{center}
     \begin{tabular}{| c | c | c |} \hline
          &  \textbf{Bowman} & \textbf{DR-BiLSTM} \\
          \hline
         \textbf{Overlap: High} & 0.57 & 0.92 \\ 
         \hline
-        \textbf{Overlap: Reg} & 0.64 & 0.88 \\
+        \textbf{Overlap: Reg} & 0.63 & 0.88 \\
         \hline
-        \textbf{Overlap: Low} & 0.69 & 0.86 \\
+        \textbf{Overlap: Low} & 0.66 & 0.86 \\
         \hline
-        \textbf{Length: Long} & 0.68 & 0.86 \\
+        \textbf{Length: Long} & 0.66 & 0.86 \\
         \hline
-        \textbf{Length: Reg} & 0.67 & 0.87 \\
+        \textbf{Length: Reg} & 0.65 & 0.87 \\
         \hline
-        \textbf{Length: Short} & 0.66 & 0.90 \\
+        \textbf{Length: Short} & 0.64 & 0.90 \\
         \hline
-        \textbf{Contains Negation} & 0.78 & 0.88 \\
+        \textbf{Contains Negation} & 0.74 & 0.88 \\
         \hline
-        \textbf{Contains Quantifier} & 0.69 & 0.85 \\
+        \textbf{Contains Quantifier} & 0.67 & 0.85 \\
         \hline
-        \textbf{Contains Belief} & 0.71 & 0.86 \\
+        \textbf{Contains Belief} & 0.86 & 0.86 \\
         \hline
     \end{tabular}
 \end{center}
@@ -94,24 +94,28 @@ We then looked at accuracy based on label, and found the test accuracy results d
     \begin{tabular}{|c|c|c|} \hline
          &  \textbf{Bowman} & \textbf{DR-BiLSTM}\\
          \hline
-        \textbf{Entailment Accuracy} & 0.70 & 0.89 \\
+        \textbf{Entailment Accuracy} & 0.68 & 0.89 \\
         \hline
-        \textbf{Neutral Accuracy} & 0.63 & 0.81 \\
+        \textbf{Neutral Accuracy} & 0.68 & 0.81 \\
         \hline
-        \textbf{Contradiction Accuracy} & 0.68 & 0.90 \\
+        \textbf{Contradiction Accuracy} & 0.58 & 0.90 \\
         \hline
     \end{tabular}
 \end{center}
-Because both models' neutral statement accuracies were consistently lower than their entailment and contradiction statement accuracies, we wanted to further delve into how the models might be labeling neutral as opposed to entailment and contradiction hypotheses. We took the DR-BiLSTM's predicted softmax probabilities and plotted them on a 3D graph to better visualize the model's perspective of each of the three labels.\\ \\
+We expected both models' neutral statement accuracies were consistently lower than their entailment and contradiction statement accuracies, but according to the table above the Bowman model actually performed better on neutral hypotheses than on contradiction hypotheses. Because this seemed counterintuitive, we wanted to further delve into how the two models might be labeling neutral as opposed to entailment and contradiction hypotheses. First, we took the DR-BiLSTM's predicted softmax probabilities and plotted them on a 3D graph to better visualize the model's perspective of each of the three labels.\\ \\
 We can interpret each of the datapoints in the graphs below as how much the DR-BiLSTM model is \say{leaning} toward each of the labels. This is possible because the output probabilities are gotten from a softmax layer, which weights the probabilities and has the property that the sum of the probabilities sum to 1. So, for instance, given a datapoint [0.1, 0.2, 0.7] (where index i indicates the predicted probability that the hypothesis is of label i, and index 0=Entailment, index 1=Neutral, and index 2=Contradiction), when this datapoint is plotted onto the graph, we can see that the datapoint is majority-weighted in contradiction. \\ \\ 
-As such, we can easily tell from the graphs below that for ground truth entailment and contradiction hypotheses, the model very heavily leans toward the correct labels. For entailment and contradiction, in fact, the model very clearly knows that a ground truth entailment hypothesis is not a contradiction hypothesis, and vice-versa. But for ground truth neutral hypotheses, the model is actually visibly \say{confused} and has heavy collections of datapoints leaning towards both entailment and contradiction, meaning that the model in general can discern a neutral hypothesis correctly, but that the model sees the neutral hypothesis as close to both entailment and contradiction.\\
-\includegraphics[scale=0.55]{lstmEntailment.png}
-\includegraphics[scale=0.55]{lstmContradiction.png}\\
-\includegraphics[scale=0.52]{lstmNeutral.png}\\
-Contrasting the DR-BiLSTM model with the Bowman model, it becomes immediately clear that the DR-BiLSTM model's output probabilities are far more certain than the probabilities outputted by the Bowman model. Although the Bowman model only performs on average about 20$\%$ worse than the DR-BiLSTM model, the output probabilities it generates from its softmax layer have more noise, as we can see from the fact that the datapoints in the graphs below are not clustered tightly near the ground truth label but are rather clustered more generally around the ground truth label. Whereas for the DR-BiLSTM model it is much more clear-cut if a hypothesis belongs to entailment as opposed to contradiction, for the Bowman model each label is a fuzzy region and the Bowman model does not seem to see the neutral label as a middle ground between entailment and contradiction as the DR-BiLSTM model does.\\
-\includegraphics[scale=0.55]{bowmanEntailment.png}
-\includegraphics[scale=0.55]{bowmanContradiction.png}\\
-\includegraphics[scale=0.55]{bowmanNeutral.png}
+As such, we can easily tell from the graphs below that for ground truth entailment and contradiction hypotheses, the model very heavily leans toward the correct labels. For entailment and contradiction, in fact, the model very clearly knows that a ground truth entailment hypothesis is not a contradiction hypothesis, and vice-versa. But for ground truth neutral hypotheses, the model is actually visibly \say{confused} and has heavy collections of datapoints leaning towards both entailment and contradiction, meaning that the model in general can discern a neutral hypothesis correctly, but that the model sees the neutral hypothesis as close to both entailment and contradiction.
+\begin{center}
+\includegraphics[scale=0.35]{lstmEntailment.png}
+\includegraphics[scale=0.35]{lstmContradiction.png}
+\includegraphics[scale=0.35]{lstmNeutral.png}
+\end{center}\\
+Contrasting the DR-BiLSTM model with the Bowman model, it becomes immediately clear that the DR-BiLSTM model's output probabilities are far more certain than the probabilities outputted by the Bowman model. Although the Bowman model only performs on average about 20$\%$ worse than the DR-BiLSTM model, the output probabilities it generates from its softmax layer have more noise, as we can see from the fact that the datapoints in the graphs below are not clustered tightly near the ground truth label but are rather clustered more generally around the ground truth label. Whereas for the DR-BiLSTM model it is much more clear-cut if a hypothesis belongs to entailment as opposed to contradiction, for the Bowman model each label is a fuzzy region and the Bowman model does not seem to see the neutral label as a middle ground between entailment and contradiction as the DR-BiLSTM model does.
+\begin{center}
+\includegraphics[scale=0.35]{bowmanEntailment.png}
+\includegraphics[scale=0.35]{bowmanContradiction.png}
+\includegraphics[scale=0.35]{bowmanNeutral.png}
+\end{center}
 \section*{e. Qualitative Analysis}
 Given a list of test sentences from the SNLI test dataset (below), we ran both the Bowman model and the DR-BiLSTM model on these five sentences and outputted their labels as compared with the ground truth. \\
 \begin{enumerate}
