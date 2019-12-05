@@ -9,7 +9,7 @@ import torch.nn as nn
 device = torch.device('cuda')
 
 # do SNLI corpus preprocessing and initial Bowman model
-snli = SNLI(batch_size=32, gpu=device)
+snli = SNLI(batch_size=64, gpu=device)
 model = Bowman(snli.TEXT.vocab)
 
 if __name__ == "__main__":

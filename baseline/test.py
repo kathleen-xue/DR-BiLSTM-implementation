@@ -7,7 +7,7 @@ device = torch.device('cuda')
 
 snli = SNLI(batch_size=32, gpu=device)
 model = Bowman(snli.TEXT.vocab)
-model.load_state_dict(torch.load("./model/bowman_64.pth"))
+model.load_state_dict(torch.load("./model/bowman_48.pth"))
 model.to(device)
 
 # first 5 premises with hypothesis
@@ -24,7 +24,7 @@ hypothesis = ["The church has cracks in the ceiling.",
 "The woman is very happy."]
 
 # ground truth
-gold_label = ["neural", "entailment", "contradiction", "neural", "entailment"]
+gold_label = ["neural", "entailment", "contradiction", "neutral", "entailment"]
 
 # tokenize
 premises_token = [snli.TEXT.preprocess(x) for x in premises]

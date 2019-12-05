@@ -33,4 +33,4 @@ class Bowman(nn.Module):
         next_in = self.dropout(next_in)
         tanh_out = self.tanh(self.tanh(self.tanh(next_in)))
         output = self.out(tanh_out) # batch_size x 200 -> batch_size x 3
-        return output
+        return torch.log_softmax(output, dim=1)

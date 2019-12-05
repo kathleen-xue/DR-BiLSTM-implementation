@@ -15,7 +15,8 @@ def bowman_train(model, dataset, criterion, optimizer, epoch_num=5):
     for epoch in range(epoch_num):
         # switch to train mode
         model.train()
-
+        runlos = 0.0
+        i = 0
         for batch in snli.train_iter:
             # get data
             premise, _ = batch.premise
@@ -30,7 +31,11 @@ def bowman_train(model, dataset, criterion, optimizer, epoch_num=5):
             loss = criterion(output, label)
             loss.backward()
             optimizer.step()
-
+            runlos += loss.item()
+            i+=1
+            if i % 1000 == 999:
+                print(runlos/1000)
+                runlos = 0.0
         train_acc, train_loss = bowman_eval(model, dataset, "Train", criterion)
         dev_acc, dev_loss = bowman_eval(model, dataset, "Dev", criterion)
         # print average loss for the epoch
@@ -124,6 +129,7 @@ def analysis_eval(model, dataset, set_name, neg_set, qua_set, bel_set):
         overlap_num = float(len(set.intersection(pre_tokens, hyp_tokens)))
         token_total = float(len(set.union(pre_tokens, hyp_tokens)))
 
+        # check for overlap
         if (overlap_num/token_total > 0.7):
             total_dict[0] += 1
             if label[0] == predict[0]:
@@ -136,7 +142,8 @@ def analysis_eval(model, dataset, set_name, neg_set, qua_set, bel_set):
             total_dict[1] += 1
             if label[0] == predict[0]:
                 correct_dict[1] += 1
-
+                
+        # check for sentence length
         if (premise[0].shape[0] > 20 or hypothesis[0].shape[0] > 20):
             total_dict[3] += 1
             if label[0] == predict[0]:
@@ -150,6 +157,7 @@ def analysis_eval(model, dataset, set_name, neg_set, qua_set, bel_set):
             if label[0] == predict[0]:
                 correct_dict[4] += 1
 
+        # check for cotaning specific words
         if (len(set.intersection(pre_tokens, neg_set))> 0 or len(set.intersection(hyp_tokens, neg_set))> 0):
             total_dict[6] += 1
             if label[0] == predict[0]:
@@ -164,9 +172,11 @@ def analysis_eval(model, dataset, set_name, neg_set, qua_set, bel_set):
                 correct_dict[8] += 1
 
     print("Overlap:")
+    # High: > 70%, Regular: 30%-70%, Low: < 30%
     print("High: %.3f\t\t Regular: %.3f\t\t Low: %.3f" % (correct_dict[0] / total_dict[0], correct_dict[1] / total_dict[1], correct_dict[2] / total_dict[2]))
     
     print("Sentence Length:")
+    # Long: > 20, Regular: 5-20, Short: < 5
     print("Long: %.3f\t\t Regular: %.3f\t\t Short: %.3f" % (correct_dict[3] / total_dict[3], correct_dict[4] / total_dict[4], correct_dict[5] / total_dict[5]))
     
     print("Contain Specific Words:")
@@ -177,10 +187,11 @@ if __name__ == "__main__":
     device = torch.device('cuda')
     snli = SNLI(batch_size=1, gpu=device)
     model = Bowman(snli.TEXT.vocab)
-    model.load_state_dict(torch.load("./model/bowman_64.pth"))
+    model.load_state_dict(torch.load("./model/bowman_48.pth"))
     model.to(device)
     criterion = nn.CrossEntropyLoss()
 
+    # build list for type of specific words
     neg = ["no", "not", "none", "nobody", "nothing", "neither", "nowhere", "never", "hardly", "barely", "doesnt", "isnt", "wasnt", "shouldnt", "wouldnt", "couldnt", "wont", "cant", "dont"]
     qua = ["much", "enough", "more", "most", "less", "least", "no", "none", "some", "any", "many", "few", "several", "almost", "nearly"]
     bel = ["know", "believe", "understand", "doubt", "think", "suppose", "recognize", "forget", "remember", "imagine", "mean", "agree", "disagree", "deny", "promise"]
