@@ -1,7 +1,7 @@
 
 # CSCI 544 Final Project
 Attempted implementation of the paper "DR-BiLSTM: Dependent Reading Bidirectional LSTM for Natural Language Inference". 
-Both models can be run from their .ipynb files (located in the "content" folder for the DR-BiLSTM model, and in the "baseline" folder for the Bowman model).
+Both models can be run from their .ipynb files (located in the "content" folder for the DR-BiLSTM model, and in the "baseline" folder for the Bowman model). For the DRLSTM .ipynb file, you need only run the last two cells to replicate the results described in the report.
 
 
 ## File Structures
