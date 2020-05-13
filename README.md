@@ -4,7 +4,7 @@ Attempted implementation of the paper "DR-BiLSTM: Dependent Reading Bidirectiona
 
 
 ## File Structures
-best.pth.tar - pretrained model used for testing
+best.pth - pretrained model used for testing
 
 *.pkl - Preprocessed data files. Google Colab was used for preprocessing the dataset and training the model.
 
